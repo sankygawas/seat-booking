@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Seat from './Seat'
+import axios from 'axios';
 
 class Grid extends Component {
 
@@ -7,19 +8,24 @@ class Grid extends Component {
       rows : []
   }
 
-  componentDidMount =()=>{
-    const arr = [
-      {
-          rowName : 'A',
-          seats : { 'A1':{booked:false},'A2':{booked:false} ,'A3':{booked:false} ,'A4':{booked:false} ,'A5':{booked:false} ,'A6':{booked:false} ,'A7':{booked:false}  }
-      },
-      {
-        rowName : 'B',
-        seats : { 'B1':{booked:false},'B2':{booked:false} ,'B3':{booked:false} ,'B4':{booked:false} ,'B5':{booked:true} ,'B6':{booked:true} ,'B7':{booked:true}  }
-    },
-    ]
-    this.setState({rows:arr})
-    
+  //initialize the state of the componenent be getting data from server
+  async componentDidMount(){
+    const data = await this.loadAvailableSeatsFromServer();
+    this.setState({rows:data}) 
+   
+  }
+
+ //async call to get data from the server
+  loadAvailableSeatsFromServer = ()=>{
+    return new Promise(resolve=>{
+        axios.get('/api/currentSeats')
+        .then(function (response) {
+          resolve(response.data.rowsArray);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    })
   }
 
   handleBooking = (seatId,rowName)=>{
