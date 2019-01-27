@@ -6,4 +6,6 @@ const router = express.Router();
 
 
 router.get('/api/currentSeats', seatsController.getCurentSeats);
+
+router.post('/api/bookSeat', seatsController.doSeatbook);
 module.exports = router;
